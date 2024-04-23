@@ -6,28 +6,30 @@ import {MyContext} from '../../types/MyContext';
 
 export default {
   Query: {
-    users: async (): Promise<PlayerOutput[]> => {
+    players: async (): Promise<PlayerOutput[]> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('Auth server URL not found');
       }
-      const users = await fetchData<Player[]>(process.env.AUTH_URL + '/users');
-      return users.map((user) => {
-        user.id = user._id;
-        return user;
+      const players = await fetchData<Player[]>(
+        process.env.AUTH_URL + '/players',
+      );
+      return players.map((player) => {
+        player.id = player._id;
+        return player;
       });
     },
-    userById: async (
+    playerById: async (
       _parent: undefined,
       args: {id: string},
     ): Promise<PlayerOutput> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('Auth server URL not found');
       }
-      const user = await fetchData<Player>(
-        process.env.AUTH_URL + '/users/' + args.id,
+      const player = await fetchData<Player>(
+        process.env.AUTH_URL + '/players/' + args.id,
       );
-      user.id = user._id;
-      return user;
+      player.id = player._id;
+      return player;
     },
     checkToken: async (
       _parent: undefined,
@@ -36,7 +38,7 @@ export default {
     ) => {
       const response = {
         message: 'Token is valid',
-        user: context.userdata,
+        player: context.playerdata,
       };
       return response;
     },
@@ -44,8 +46,8 @@ export default {
   Mutation: {
     register: async (
       _parent: undefined,
-      args: {user: Omit<Player, 'role'>},
-    ): Promise<{user: PlayerOutput; message: string}> => {
+      args: {player: Omit<Player, 'role'>},
+    ): Promise<{player: PlayerOutput; message: string}> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('Auth URL not set in .env file');
       }
@@ -54,12 +56,12 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(args.user),
+        body: JSON.stringify(args.player),
       };
-      console.log('args.user:', args.user);
+      console.log('args.player:', args.player);
       const registerResponse = await fetchData<
         MessageResponse & {data: Player}
-      >(process.env.AUTH_URL + '/users', options);
+      >(process.env.AUTH_URL + '/players', options);
       console.log('registerResponse:', registerResponse);
 
       if (!registerResponse.data || !registerResponse.data._id) {
@@ -67,14 +69,14 @@ export default {
       }
 
       return {
-        user: {...registerResponse.data, id: registerResponse.data._id},
+        player: {...registerResponse.data, id: registerResponse.data._id},
         message: registerResponse.message,
       };
     },
     login: async (
       _parent: undefined,
-      args: {credentials: {username: string; password: string}},
-    ): Promise<MessageResponse & {token: string; user: PlayerOutput}> => {
+      args: {credentials: {playername: string; password: string}},
+    ): Promise<MessageResponse & {token: string; player: PlayerOutput}> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('Auth URL not set in .env file');
       }
@@ -87,24 +89,24 @@ export default {
       };
 
       const loginResponse = await fetchData<
-        MessageResponse & {token: string; user: PlayerOutput}
+        MessageResponse & {token: string; player: PlayerOutput}
       >(process.env.AUTH_URL + '/auth/login', options);
 
-      loginResponse.user.id = loginResponse.user._id;
+      loginResponse.player.id = loginResponse.player._id;
 
       return loginResponse;
     },
-    updateUser: async (
+    updatePlayer: async (
       _parent: undefined,
-      args: {user: Omit<Player, 'role' | 'password'>},
+      args: {player: Omit<Player, 'role' | 'password'>},
       context: MyContext,
-    ): Promise<{user: PlayerOutput; message: string}> => {
+    ): Promise<{player: PlayerOutput; message: string}> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('Auth URL not set in .env file');
       }
 
-      // Check if the user is authenticated
-      if (!context.userdata) {
+      // Check if the player is authenticated
+      if (!context.playerdata) {
         throw new GraphQLError('User not authenticated');
       }
 
@@ -112,72 +114,75 @@ export default {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${context.userdata?.token}`,
+          Authorization: `Bearer ${context.playerdata?.token}`,
         },
-        body: JSON.stringify(args.user),
+        body: JSON.stringify(args.player),
       };
 
       const updateResponse = await fetchData<MessageResponse & {data: Player}>(
-        process.env.AUTH_URL + '/users/' + context.userdata.player._id,
+        process.env.AUTH_URL + '/players/' + context.playerdata.player._id,
         options,
       );
 
       updateResponse.data.id = updateResponse.data._id;
 
-      return {user: updateResponse.data, message: updateResponse.message};
+      return {player: updateResponse.data, message: updateResponse.message};
     },
-    updateUserAsAdmin: async (
+    updatePlayerAsAdmin: async (
       _parent: undefined,
-      args: {id: string; user: Omit<Player, 'role' | 'password'>},
+      args: {id: string; player: Omit<Player, 'role' | 'password'>},
       context: MyContext,
-    ): Promise<{user: PlayerOutput; message: string}> => {
+    ): Promise<{player: PlayerOutput; message: string}> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('Auth URL not set in .env file');
       }
 
-      // Check if the user is an admin
-      if (context.userdata?.role !== 'admin') {
-        throw new GraphQLError('Only admins can update other users');
+      // Check if the player is an admin
+      if (context.playerdata?.role !== 'admin') {
+        throw new GraphQLError('Only admins can update other players');
       }
       const options = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${context.userdata?.token}`,
+          Authorization: `Bearer ${context.playerdata?.token}`,
         },
-        body: JSON.stringify(args.user),
+        body: JSON.stringify(args.player),
       };
 
       const updateResponse = await fetchData<MessageResponse & {data: Player}>(
-        process.env.AUTH_URL + '/users/' + args.id,
+        process.env.AUTH_URL + '/players/' + args.id,
         options,
       );
 
       updateResponse.data.id = updateResponse.data._id;
 
-      return {user: updateResponse.data, message: updateResponse.message};
+      return {player: updateResponse.data, message: updateResponse.message};
     },
-    deleteUser: async (
+    deletePlayer: async (
       _parent: undefined,
       _args: {},
       context: MyContext,
-    ): Promise<{message: string; user: Omit<Player, 'role' | 'password'>}> => {
+    ): Promise<{
+      message: string;
+      player: Omit<Player, 'role' | 'password'>;
+    }> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('Auth URL not set in .env file');
       }
 
-      // Check if the user is authenticated
-      if (!context.userdata) {
+      // Check if the player is authenticated
+      if (!context.playerdata) {
         throw new GraphQLError('User not authenticated');
       }
 
-      // Fetch the user before deleting
-      const userResponse = await fetchData<{data: Player}>(
-        process.env.AUTH_URL + '/users/' + context.userdata.player._id,
+      // Fetch the player before deleting
+      const playerResponse = await fetchData<{data: Player}>(
+        process.env.AUTH_URL + '/players/' + context.playerdata.player._id,
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${context.userdata?.token}`,
+            Authorization: `Bearer ${context.playerdata?.token}`,
           },
         },
       );
@@ -185,38 +190,41 @@ export default {
       const options = {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${context.userdata?.token}`,
+          Authorization: `Bearer ${context.playerdata?.token}`,
         },
       };
 
       const deleteResponse = await fetchData<MessageResponse>(
-        process.env.AUTH_URL + '/users/' + context.userdata.player._id,
+        process.env.AUTH_URL + '/players/' + context.playerdata.player._id,
         options,
       );
 
-      return {message: deleteResponse.message, user: userResponse.data};
+      return {message: deleteResponse.message, player: playerResponse.data};
     },
-    deleteUserAsAdmin: async (
+    deletePlayerAsAdmin: async (
       _parent: undefined,
       args: {id: string},
       context: MyContext,
-    ): Promise<{message: string; user: Omit<Player, 'role' | 'password'>}> => {
+    ): Promise<{
+      message: string;
+      player: Omit<Player, 'role' | 'password'>;
+    }> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('Auth URL not set in .env file');
       }
 
-      // Check if the user is an admin
-      if (context.userdata?.role !== 'admin') {
-        throw new GraphQLError('Only admins can delete other users');
+      // Check if the player is an admin
+      if (context.playerdata?.role !== 'admin') {
+        throw new GraphQLError('Only admins can delete other players');
       }
 
-      // Fetch the user before deleting
-      const userResponse = await fetchData<{data: Player}>(
-        process.env.AUTH_URL + '/users/' + args.id,
+      // Fetch the player before deleting
+      const playerResponse = await fetchData<{data: Player}>(
+        process.env.AUTH_URL + '/players/' + args.id,
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${context.userdata?.token}`,
+            Authorization: `Bearer ${context.playerdata?.token}`,
           },
         },
       );
@@ -224,16 +232,16 @@ export default {
       const options = {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${context.userdata?.token}`,
+          Authorization: `Bearer ${context.playerdata?.token}`,
         },
       };
 
       const deleteResponse = await fetchData<MessageResponse>(
-        process.env.AUTH_URL + '/users/' + args.id,
+        process.env.AUTH_URL + '/players/' + args.id,
         options,
       );
 
-      return {message: deleteResponse.message, user: userResponse.data};
+      return {message: deleteResponse.message, player: playerResponse.data};
     },
   },
 };

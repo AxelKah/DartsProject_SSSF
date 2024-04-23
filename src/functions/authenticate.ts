@@ -22,7 +22,7 @@ export default async (req: Request): Promise<MyContext> => {
         player: userFromToken,
       };
 
-      return {userdata: tokenContent};
+      return {playerdata: tokenContent};
     } catch (error) {
       return {};
     }

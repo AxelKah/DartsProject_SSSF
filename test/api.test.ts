@@ -119,8 +119,8 @@ describe('Testing graphql api', () => {
     expect(dataFromToken).toHaveProperty('role');
   });
 
-  // test get all users
-  it('should return array of users', async () => {
+  // test get all players
+  it('should return array of players', async () => {
     await getUser(app);
   });
 

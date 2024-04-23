@@ -4,9 +4,21 @@ type Player {
   email: String!
 }
 
-type GameResponse {
+type LoginResponse {
+  token: String
   message: String!
-  game: Game!
+  player: Player!
+}
+
+type PlayerResponse{
+  message: String!
+  player: Player!
+
+}
+
+input Credentials {
+  username: String!
+  password: String!
 }
 
 input PlayerInput {
@@ -21,9 +33,17 @@ input GameInput {
   score2: Int!
 }
 
+input PlayerModify {
+  player_name: String
+  email: String
+  password: String
+}
+
 type Query {
   players: [Player]
   playerById(id: ID!): Player
+  checkToken: PlayerResponse
+
 }
 
 type PlayerDeleteResponse {
@@ -32,7 +52,16 @@ type PlayerDeleteResponse {
 }
 
 type Mutation {
-  createPlayer(player: PlayerInput!): Player
-  updatePlayer(id: ID!, player: PlayerInput!): Player
+  login(credentials: Credentials!): LoginResponse
+  register(player: PlayerInput!): PlayerResponse
+  updatePlayer(player: PlayerModify!): PlayerResponse
   deletePlayer: PlayerDeleteResponse
+  """
+  Separate mutations for admin because of rest api
+  """
+  updatePlayerAsAdmin(player: PlayerModify!, id: ID!): PlayerResponse
+  """
+  Separate mutations for admin because of rest api
+  """
+  deletePlayerAsAdmin(id: ID!): PlayerDeleteResponse
 }
