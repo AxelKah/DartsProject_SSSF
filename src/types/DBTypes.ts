@@ -1,61 +1,46 @@
 import {Document, Types} from 'mongoose';
-import {Point} from 'geojson';
 
-type User = Partial<Document> & {
+type Player = Partial<Document> & {
   id: Types.ObjectId | string;
-  user_name: string;
+  name: string;
   email: string;
-  role: 'user' | 'admin';
+  role: 'player' | 'admin';
   password: string;
+  score: number;
 };
 
-type UserOutput = Omit<User, 'password' | 'role'>;
+type PlayerOutput = Omit<Player, 'score'>;
 
-type UserInput = Omit<User, 'id' | 'role'>;
+type PlayerInput = Omit<Player, 'id'>;
 
-type UserTest = Partial<User>;
+type PlayerTest = Partial<Player>;
 
-type LoginUser = Omit<User, 'password'>;
+type LoginPlayer = Omit<Player, 'password'>;
 
 type TokenContent = {
   role: string;
   token: string;
-  user: LoginUser;
+  player: LoginPlayer;
 };
 
-type Cat = Partial<Document> & {
+type Game = Partial<Document> & {
   id?: Types.ObjectId | string;
-  cat_name: string;
-  weight: number;
-  owner: Types.ObjectId | User;
-  filename: string;
-  birthdate: Date;
-  location: Point;
+  name: string;
+  players: Types.ObjectId[] | Player[];
+  winner: Types.ObjectId | Player;
+  startDate: Date;
+  endDate: Date;
 };
 
-type CatTest = Partial<Cat>;
-
-// *** db location query
-type Location = {
-  lat: number;
-  lng: number;
-};
-
-type LocationInput = {
-  topRight: Location;
-  bottomLeft: Location;
-};
-// ***
+type GameTest = Partial<Game>;
 
 export {
-  User,
-  UserOutput,
-  UserInput,
-  UserTest,
-  LoginUser,
-  Cat,
-  CatTest,
+  Player,
+  PlayerOutput,
+  PlayerInput,
+  PlayerTest,
+  Game,
+  GameTest,
+  LoginPlayer,
   TokenContent,
-  Location,
-  LocationInput,
 };

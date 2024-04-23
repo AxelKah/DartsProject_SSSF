@@ -1,0 +1,32 @@
+type Game {
+  id: ID!
+  player1: Player!
+  player2: Player!
+  score1: Int!
+  score2: Int!
+  winner: Player
+}
+
+type Round {
+    id: ID!
+    roundNumber: Int!
+    darts: [Dart!]!
+}
+
+type Dart {
+    id: ID!
+    score: Int!
+    multiplier: Int!
+}
+
+type Query {
+    game(id: ID!): Game
+    games: [Game]
+    gamesByPlayer(playerId: ID!): [Game]
+}
+
+type Mutation {
+    createGame(players: [String!]!): Game
+    updateScore(gameId: ID!, playerId: ID!, roundNumber: Int!, dartScores: [Int!]!, dartMultipliers: [Int!]!): Game
+    endGame(gameId: ID!): Game
+}

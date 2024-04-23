@@ -1,0 +1,38 @@
+type Player {
+  id: ID!
+  player_name: String!
+  email: String!
+}
+
+type GameResponse {
+  message: String!
+  game: Game!
+}
+
+input PlayerInput {
+  player_name: String!
+  email: String!
+}
+
+input GameInput {
+  player1: ID!
+  player2: ID!
+  score1: Int!
+  score2: Int!
+}
+
+type Query {
+  players: [Player]
+  playerById(id: ID!): Player
+}
+
+type PlayerDeleteResponse {
+  message: String!
+  player: Player
+}
+
+type Mutation {
+  createPlayer(player: PlayerInput!): Player
+  updatePlayer(id: ID!, player: PlayerInput!): Player
+  deletePlayer: PlayerDeleteResponse
+}

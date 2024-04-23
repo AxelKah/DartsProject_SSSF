@@ -1,6 +1,6 @@
 import {Request} from 'express';
 import jwt from 'jsonwebtoken';
-import {LoginUser, TokenContent} from '../types/DBTypes';
+import {LoginPlayer, TokenContent} from '../types/DBTypes';
 import {MyContext} from '../types/MyContext';
 
 export default async (req: Request): Promise<MyContext> => {
@@ -11,7 +11,7 @@ export default async (req: Request): Promise<MyContext> => {
       const userFromToken = jwt.verify(
         token,
         process.env.JWT_SECRET as string,
-      ) as LoginUser;
+      ) as LoginPlayer;
 
       if (!userFromToken) {
         return {};
@@ -19,7 +19,7 @@ export default async (req: Request): Promise<MyContext> => {
       const tokenContent: TokenContent = {
         role: userFromToken.role,
         token: token,
-        user: userFromToken,
+        player: userFromToken,
       };
 
       return {userdata: tokenContent};
