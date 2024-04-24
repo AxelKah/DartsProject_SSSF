@@ -1,7 +1,7 @@
 import {TokenContent} from './DBTypes';
 
 type MyContext = {
-  playerdata?: TokenContent;
+  userdata?: TokenContent;
 };
 
 export {MyContext};

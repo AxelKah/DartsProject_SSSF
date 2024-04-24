@@ -1,18 +1,18 @@
-type Player {
+type User {
   id: ID!
-  player_name: String!
+  user_name: String!
   email: String!
 }
 
 type LoginResponse {
   token: String
   message: String!
-  player: Player!
+  user: User!
 }
 
-type PlayerResponse{
+type UserResponse{
   message: String!
-  player: Player!
+  user: User!
 
 }
 
@@ -21,47 +21,47 @@ input Credentials {
   password: String!
 }
 
-input PlayerInput {
-  player_name: String!
+input UserInput {
+  user_name: String!
   email: String!
 }
 
 input GameInput {
-  player1: ID!
-  player2: ID!
+  user1: ID!
+  user2: ID!
   score1: Int!
   score2: Int!
 }
 
-input PlayerModify {
-  player_name: String
+input UserModify {
+  user_name: String
   email: String
   password: String
 }
 
 type Query {
-  players: [Player]
-  playerById(id: ID!): Player
-  checkToken: PlayerResponse
+  users: [User]
+  userById(id: ID!): User
+  checkToken: UserResponse
 
 }
 
-type PlayerDeleteResponse {
+type UserDeleteResponse {
   message: String!
-  player: Player
+  user: User
 }
 
 type Mutation {
   login(credentials: Credentials!): LoginResponse
-  register(player: PlayerInput!): PlayerResponse
-  updatePlayer(player: PlayerModify!): PlayerResponse
-  deletePlayer: PlayerDeleteResponse
+  register(user: UserInput!): UserResponse
+  updateUser(user: UserModify!): UserResponse
+  deleteUser: UserDeleteResponse
   """
   Separate mutations for admin because of rest api
   """
-  updatePlayerAsAdmin(player: PlayerModify!, id: ID!): PlayerResponse
+  updateUserAsAdmin(user: UserModify!, id: ID!): UserResponse
   """
   Separate mutations for admin because of rest api
   """
-  deletePlayerAsAdmin(id: ID!): PlayerDeleteResponse
+  deleteUserAsAdmin(id: ID!): UserDeleteResponse
 }

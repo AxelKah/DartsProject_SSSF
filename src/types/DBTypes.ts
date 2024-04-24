@@ -1,33 +1,33 @@
 import {Document, Types} from 'mongoose';
 
-type Player = Partial<Document> & {
+type User = Partial<Document> & {
   id: Types.ObjectId | string;
   name: string;
   email: string;
-  role: 'player' | 'admin';
+  role: 'user' | 'admin';
   password: string;
   score: number;
 };
 
-type PlayerOutput = Omit<Player, 'score'>;
+type UserOutput = Omit<User, 'score'>;
 
-type PlayerInput = Omit<Player, 'id'>;
+type UserInput = Omit<User, 'id'>;
 
-type PlayerTest = Partial<Player>;
+type UserTest = Partial<User>;
 
-type LoginPlayer = Omit<Player, 'password'>;
+type LoginUser = Omit<User, 'password'>;
 
 type TokenContent = {
   role: string;
   token: string;
-  player: LoginPlayer;
+  user: LoginUser;
 };
 
 type Game = Partial<Document> & {
   id?: Types.ObjectId | string;
   name: string;
-  players: Types.ObjectId[] | Player[];
-  winner: Types.ObjectId | Player;
+  users: Types.ObjectId[] | User[];
+  winner: Types.ObjectId | User;
   startDate: Date;
   endDate: Date;
 };
@@ -35,12 +35,12 @@ type Game = Partial<Document> & {
 type GameTest = Partial<Game>;
 
 export {
-  Player,
-  PlayerOutput,
-  PlayerInput,
-  PlayerTest,
+  User,
+  UserOutput,
+  UserInput,
+  UserTest,
   Game,
   GameTest,
-  LoginPlayer,
+  LoginUser,
   TokenContent,
 };

@@ -1,10 +1,10 @@
 type Game {
   id: ID!
-  player1: Player!
-  player2: Player!
+  user1: User!
+  user2: User!
   score1: Int!
   score2: Int!
-  winner: Player
+  winner: User
 }
 
 type Round {
@@ -22,11 +22,11 @@ type Dart {
 type Query {
     game(id: ID!): Game
     games: [Game]
-    gamesByPlayer(playerId: ID!): [Game]
+    gamesByUser(userId: ID!): [Game]
 }
 
 type Mutation {
-    createGame(players: [String!]!): Game
-    updateScore(gameId: ID!, playerId: ID!, roundNumber: Int!, dartScores: [Int!]!, dartMultipliers: [Int!]!): Game
+    createGame(users: [String!]!): Game
+    updateScore(gameId: ID!, userId: ID!, roundNumber: Int!, dartScores: [Int!]!, dartMultipliers: [Int!]!): Game
     endGame(gameId: ID!): Game
 }

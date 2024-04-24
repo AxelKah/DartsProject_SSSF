@@ -5,25 +5,25 @@ import {UserTest} from '../src/types/DBTypes';
 import {Application} from 'express';
 import {LoginResponse, UserResponse} from '../src/types/MessageTypes';
 
-// get user from graphql query players
+// get user from graphql query users
 const getUser = (url: string | Application): Promise<UserTest[]> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
-        query: '{players{id user_name email}}',
+        query: '{users{id user_name email}}',
       })
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
-          const players = response.body.data.players;
-          expect(players).toBeInstanceOf(Array);
-          expect(players[0]).toHaveProperty('id');
-          expect(players[0]).toHaveProperty('user_name');
-          expect(players[0]).toHaveProperty('email');
-          resolve(response.body.data.players);
+          const users = response.body.data.users;
+          expect(users).toBeInstanceOf(Array);
+          expect(users[0]).toHaveProperty('id');
+          expect(users[0]).toHaveProperty('user_name');
+          expect(users[0]).toHaveProperty('email');
+          resolve(response.body.data.users);
         }
       });
   });

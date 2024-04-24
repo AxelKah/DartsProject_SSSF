@@ -1,3 +1,3 @@
-import playerReslover from './playerResolver';
+import userReslover from './playerResolver';
 
-export default [playerReslover];
+export default [userReslover];
