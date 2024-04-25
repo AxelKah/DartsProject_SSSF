@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import {Game} from '../../types/DBTypes';
 
-const gameSchema = new mongoose.Schema<Game>({
+const gameModel = new mongoose.Schema<Game>({
   user1: {
     type: String,
     required: [true, 'User1 is required'],
@@ -18,4 +18,4 @@ const gameSchema = new mongoose.Schema<Game>({
 });
 
 
-export default mongoose.model<Game>('Game', gameSchema);
+export default mongoose.model('Game', gameModel);

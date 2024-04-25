@@ -24,7 +24,7 @@ input GameModifyInput{
 
 type GameMessage {
     message: String!
-    game: Game
+    game: Game!
 }
 
 type Mutation {

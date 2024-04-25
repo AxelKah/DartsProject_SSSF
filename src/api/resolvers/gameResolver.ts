@@ -20,7 +20,8 @@ export default {
     games: async (): Promise<Game[]> => {
       return await gameModel.find();
     },
-    game: async (_parent: undefined, args: {id: string}): Promise<Game> => {
+
+    gameById: async (_parent: undefined, args: {id: string}): Promise<Game> => {
       const game = await gameModel.findById(args.id);
       if (!game) {
         throw new GraphQLError('Game not found', {
@@ -29,15 +30,50 @@ export default {
           },
         });
       }
-      return game;
+    return game;
     },
   },
   Mutation: {
     addGame: async (
+    _parent: undefined,
+    args: {game: Game},
+    context: MyContext,
+    ): Promise<{game: Game; message: string}> => {
+    const newGame = new gameModel(args.game);
+    await newGame.save();
+    return {message: 'Game added successfully', game: newGame};
+    },
+    modifyGame: async (
+    _parent: undefined,
+    args: {game: Game; id: string},
+    context: MyContext,
+    ): Promise<{game: Game; message: string}> => {
+      if (context.userdata?.role !== 'admin') {
+        throw new GraphQLError('Unauthorized');
+      }
+      console.log('args', args);
+      const game = await gameModel.findById(args.id);
+      if (!game) {
+        throw new GraphQLError('Organization not found');
+      }
+      await game.save();
+      return {message: 'Organization modified', game: game};
+    },
+  },
+};
+
+
+
+
+
+
+/*
+With authentication
+ addGame: async (
       _parent: undefined,
-      args: {game: Omit<Game, '_id'>},
+      args: {game: Game},
       context: MyContext,
-    ): Promise<{message: string; game?: Game}> => {
+    ): Promise<{game: Game; message: string}> => {
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {
           extensions: {
@@ -45,13 +81,8 @@ export default {
           },
         });
       }
-      const game = await gameModel.create(args.game);
-      if (game) {
-        socket.emit('update', 'game');
-        return {message: 'Game added successfully', game};
-      } else {
-        return {message: 'Game not added'};
-      }
+      const newGame = new gameModel(args.game);
+      await newGame.save();
+      return {message: 'Game added successfully', game: newGame};
     },
-  },
-};
+*/
