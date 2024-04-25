@@ -51,6 +51,7 @@ type UserDeleteResponse {
   user: User
 }
 
+
 type Mutation {
   login(credentials: Credentials!): LoginResponse
   register(user: UserInput!): UserResponse

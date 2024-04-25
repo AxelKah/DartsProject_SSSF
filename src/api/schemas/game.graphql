@@ -1,32 +1,34 @@
 type Game {
-  id: ID!
-  user1: User!
-  user2: User!
-  score1: Int!
-  score2: Int!
-  winner: User
-}
-
-type Round {
-    id: ID!
-    roundNumber: Int!
-    darts: [Dart!]!
-}
-
-type Dart {
-    id: ID!
-    score: Int!
-    multiplier: Int!
+  id: ID
+  user1: String
+  user2: String
+  winner: String
 }
 
 type Query {
-    game(id: ID!): Game
-    games: [Game]
-    gamesByUser(userId: ID!): [Game]
+  games: [Game]
+  gameById(id: ID!): Game
+}
+
+input GameInput {
+  user1: String!
+  user2: String!
+  winner: String!
+}
+
+input GameModifyInput{
+    user1: String
+    user2: String
+    winner: String
+}
+
+type GameMessage {
+    message: String!
+    game: Game
 }
 
 type Mutation {
-    createGame(users: [String!]!): Game
-    updateScore(gameId: ID!, userId: ID!, roundNumber: Int!, dartScores: [Int!]!, dartMultipliers: [Int!]!): Game
-    endGame(gameId: ID!): Game
+    addGame(game: GameInput!): GameMessage
+    modifyGame(game: GameModifyInput!, id: ID!): GameMessage
+    deleteGame(id: ID!): GameMessage
 }
