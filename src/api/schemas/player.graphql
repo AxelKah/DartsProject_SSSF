@@ -26,12 +26,7 @@ input UserInput {
   email: String!
 }
 
-input GameInput {
-  user1: ID!
-  user2: ID!
-  score1: Int!
-  score2: Int!
-}
+
 
 input UserModify {
   user_name: String

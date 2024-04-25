@@ -28,7 +28,7 @@ type GameMessage {
 }
 
 type Mutation {
-    addGame(game: GameInput!): GameMessage
+    addGame(game: GameInput): GameMessage
     modifyGame(game: GameModifyInput!, id: ID!): GameMessage
     deleteGame(id: ID!): GameMessage
 }

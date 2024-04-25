@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {Document, Types} from 'mongoose';
 
 type User = Partial<Document> & {
@@ -38,12 +39,12 @@ type Game = Partial<Document> & {
   startDate: Date;
   endDate: Date;
 };
-*/
+
 type GameOutput = Omit<Game, 'users' | 'winner'> & {
   users: UserOutput[];
   winner: UserOutput;
 };
-
+*/
 type GameTest = Partial<Game>;
 
 export {
@@ -55,5 +56,5 @@ export {
   GameTest,
   LoginUser,
   TokenContent,
-  GameOutput,
+  // GameOutput,
 };
