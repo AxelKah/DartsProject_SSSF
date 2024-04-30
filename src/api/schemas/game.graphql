@@ -23,8 +23,9 @@ input GameModifyInput{
 }
 
 type GameMessage {
-    message: String!
-    game: Game!
+  user1: String
+  user2: String
+  winner: String
 }
 
 type Mutation {
