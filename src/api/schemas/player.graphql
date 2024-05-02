@@ -24,6 +24,7 @@ input Credentials {
 input UserInput {
   user_name: String!
   email: String!
+  password: String!
 }
 
 
