@@ -28,8 +28,6 @@ app.use(
 
 (async () => {
   try {
-    // TODO Create a rate limit rule instance (not WSK2 course)
-
     const schema = applyMiddleware(
       makeExecutableSchema({
         typeDefs,

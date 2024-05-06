@@ -30,21 +30,6 @@ type Game = Partial<Document> & {
   winner: string;
 };
 
-/*
-type Game = Partial<Document> & {
-  id?: Types.ObjectId | string;
-  name: string;
-  users: Types.ObjectId[] | User[];
-  winner: Types.ObjectId | User;
-  startDate: Date;
-  endDate: Date;
-};
-
-type GameOutput = Omit<Game, 'users' | 'winner'> & {
-  users: UserOutput[];
-  winner: UserOutput;
-};
-*/
 type GameTest = Partial<Game>;
 
 export {
@@ -56,5 +41,4 @@ export {
   GameTest,
   LoginUser,
   TokenContent,
-  // GameOutput,
 };

@@ -4,16 +4,9 @@ import {GraphQLError} from 'graphql';
 import gameModel from '../models/gameModel';
 import {MyContext} from '../../types/MyContext';
 
-import {io, Socket} from 'socket.io-client';
-import {ClientToServerEvents, ServerToClientEvents} from '../../types/Socket';
-
 if (!process.env.SOCKET_URL) {
   throw new Error('SOCKET_URL not defined');
 }
-// socket io client
-const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-  process.env.SOCKET_URL,
-);
 
 export default {
   Query: {
@@ -54,10 +47,10 @@ export default {
       console.log('args', args);
       const game = await gameModel.findById(args.id);
       if (!game) {
-        throw new GraphQLError('Organization not found');
+        throw new GraphQLError('game not found');
       }
       await game.save();
-      return {message: 'Organization modified', game: game};
+      return {message: ' game modified', game: game};
     },
   },
 };
