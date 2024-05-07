@@ -28,6 +28,55 @@ export default {
   },
   Mutation: {
     addGame: async (
+      _parent: undefined,
+      args: {game: Game},
+      context: MyContext,
+    ): Promise<{game: Game; message: string}> => {
+      if (!context.userdata) {
+        throw new GraphQLError('User not authenticated', {
+          extensions: {
+            code: '401 NOT AUTHENTICATED',
+          },
+        });
+      }
+      const newGame = new gameModel(args.game);
+      await newGame.save();
+      return {message: 'Game added successfully', game: newGame};
+    },
+    modifyGame: async (
+      _parent: undefined,
+      args: {game: Game; id: string},
+      context: MyContext,
+      ): Promise<{game: Game; message: string}> => {
+        if (context.userdata?.role !== 'admin') {
+          throw new GraphQLError('Unauthorized');
+        }
+        console.log('args', args);
+        const game = await gameModel.findById(args.id);
+        if (!game) {
+          throw new GraphQLError('game not found');
+        }
+        await game.save();
+        return {message: ' game modified', game: game};
+      },
+    },
+};
+
+
+
+
+
+
+/*
+With authentication
+
+*/
+
+
+
+//no authentication
+/*
+    addGame: async (
     _parent: undefined,
     args: {game: Game},
     context: MyContext,
@@ -52,30 +101,4 @@ export default {
       await game.save();
       return {message: ' game modified', game: game};
     },
-  },
-};
-
-
-
-
-
-
-/*
-With authentication
- addGame: async (
-      _parent: undefined,
-      args: {game: Game},
-      context: MyContext,
-    ): Promise<{game: Game; message: string}> => {
-      if (!context.userdata) {
-        throw new GraphQLError('User not authenticated', {
-          extensions: {
-            code: '401 NOT AUTHENTICATED',
-          },
-        });
-      }
-      const newGame = new gameModel(args.game);
-      await newGame.save();
-      return {message: 'Game added successfully', game: newGame};
-    },
-*/
+  },*/
