@@ -10,6 +10,7 @@ type User = Partial<Document> & {
   score: number;
 };
 
+
 type UserOutput = Omit<User, 'score'>;
 
 type UserInput = Omit<User, 'id'>;
