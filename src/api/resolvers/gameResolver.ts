@@ -30,19 +30,12 @@ export default {
     addGame: async (
       _parent: undefined,
       args: {game: Game},
-      context: MyContext,
-    ): Promise<{game: Game; message: string}> => {
-      if (!context.userdata) {
-        throw new GraphQLError('User not authenticated', {
-          extensions: {
-            code: '401 NOT AUTHENTICATED',
-          },
-        });
-      }
+      //context: MyContext,
+      ): Promise<{game: Game; message: string}> => {
       const newGame = new gameModel(args.game);
       await newGame.save();
       return {message: 'Game added successfully', game: newGame};
-    },
+      },
     modifyGame: async (
       _parent: undefined,
       args: {game: Game; id: string},
@@ -101,4 +94,44 @@ With authentication
       await game.save();
       return {message: ' game modified', game: game};
     },
-  },*/
+  },
+  
+  with autjhentication
+
+
+      addGame: async (
+      _parent: undefined,
+      args: {game: Game},
+      context: MyContext,
+    ): Promise<{game: Game; message: string}> => {
+      if (!context.userdata) {
+        throw new GraphQLError('User not authenticated', {
+          extensions: {
+            code: '401 NOT AUTHENTICATED',
+          },
+        });
+      }
+      const newGame = new gameModel(args.game);
+      await newGame.save();
+      return {message: 'Game added successfully', game: newGame};
+    },
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  */
