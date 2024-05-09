@@ -3,6 +3,12 @@
 ## Description
 This is a project for Server-Side Scripting course that focuses on building a Darts scoring application.
 
+## Project Idea
+This app's idea is to allow you to play darts online against your friends from the comfort of your own home.
+
+## Target audiance
+The target audiance for this app is people who owns a Darts board and would like to play darts against their friends without physically being at the same place.
+
 ## Features
 - Login / Register
 - Score tracking for multiple players
