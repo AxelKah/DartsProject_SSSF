@@ -20,6 +20,7 @@ This is a project for Server-Side Scripting course that focuses on building a Da
 5. Navigate to the project directories (example): `cd DartsProject_SSSF`
 6. Install the dependencies: `npm install` do this for all the cloned repositories
 7. Setup .env file(use .env.sample as a template)
+
 >   NODE_ENV=development
 >   PORT=3000
 >   DATABASE_URL= (Add your own MongoDB link)
@@ -27,6 +28,7 @@ This is a project for Server-Side Scripting course that focuses on building a Da
 >   AUTH_URL=http://localhost:3001/api/v1
 >   UPLOAD_URL=http://localhost:3002/api/v1
 >   SOCKET_URL=http://localhost:3003
+
 8. Run `npm run dev` for all the repositories (Backend, Frontend, Auth, Socket)
 
 
